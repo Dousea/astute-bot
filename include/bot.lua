@@ -22,6 +22,6 @@ do
 end
 
 function bot_invoke(id, index, ...)
-	-- methods can be invoked if bot is already initialized
+	-- Methods can be invoked if bot is already initialized or @index is 'reset'
 	local self = bot[id] return (index == 'reset' or self._init) and self[index](self, ...) or nil
 end
