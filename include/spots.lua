@@ -1,6 +1,7 @@
 local spots
 local mapspots = {}
 
+-- Load the .spots file of the map, returns error if not exists
 do
 	local file, err = io.open('maps/' .. map 'name' .. '.spots', 'r')
 	

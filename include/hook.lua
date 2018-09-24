@@ -1,4 +1,4 @@
--- just straight use _G table to hook
+-- We're lazy programmers, so just directly use _G table to hook
 setmetatable(_G, {__newindex=function(t, k, v)local hook=k:match'bot_hook_(%w+)'if hook then addhook(hook, k)end rawset(t, k, v) end})
 
 function bot_hook_spawn(id)
