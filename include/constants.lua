@@ -26,7 +26,7 @@ do
 			-- we need to compare the 'price' (index #2)
 			if value[2] > list[i][2] then
 				for j = #list, i, -1 do
-					list[i] = list[i+1]
+					list[j + 1] = list[j]
 				end
 				
 				list[i] = value
@@ -37,10 +37,10 @@ do
 		end
 		
 		if lastinsertion then
-			list[#list+1] = value
+			list[#list + 1] = value
 		end
 	end
-
+	
 	-- CONSTANT for primary weapons sorted by their prices (highest->lowest)
 	BOT_BUY_WEAPON_PRIMARY = {} for team = 1, 2 do
 		local primwpns = {}
@@ -91,7 +91,7 @@ for wpn = 1, 100 do
 		local vol = vol_recoil + vol_dmg
 		
 		-- Tactical shield, etc. don't create noises on attack
-		-- so we need to check it over again
+		-- so we need to check if the volume is over 0
 		if vol > 0 then
 			local vol_bonus = 1.5 + (slot == 1 and 1.5 or 0)
 			_G['BOT_NOISE_WEAPON_' .. wpn] = vol + vol_bonus
