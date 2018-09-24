@@ -18,6 +18,9 @@ do
 	end
 end
 
+-- This function has two overloads:
+-- 1. bot_spots_get(id)
+-- 2. bot_spots_get(x, y)
 function bot_spots_get(arg1, arg2)
 	if arg1 and not arg2 then
 		local spot = spots[arg1]
