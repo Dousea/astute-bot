@@ -19,8 +19,8 @@ do
 end
 
 -- This function has two overloads:
--- 1. bot_spots_get(id)
--- 2. bot_spots_get(x, y)
+-- 1. bot_spots_get(<spot ID>) returns spot x, spot y, occupier ID
+-- 2. bot_spots_get(<spot x>, <spot y>) returns spot ID
 function bot_spots_get(arg1, arg2)
 	if arg1 and not arg2 then
 		local spot = spots[arg1]
@@ -30,6 +30,7 @@ function bot_spots_get(arg1, arg2)
 	end
 end
 
+-- Resets all spots' occupier to no occupier (0)
 function bot_spots_resetoccupier()
 	for i = 1, #spots do
 		local spot = spots[i]
@@ -37,12 +38,13 @@ function bot_spots_resetoccupier()
 	end
 end
 
+-- Sets a spot's occupier
 function bot_spots_occupy(id, occupier)
 	local spot = spots[id]
 	mapspots[spot[1]][spot[2]][2] = occupier
 end
 
--- Get hiding spots around the x, y (within virtual screen, 26x15 tiles)
+-- Gets hiding spots around the x, y (within virtual screen, 26x15 tiles)
 function bot_spots_find(x, y)
 	local xsize, ysize = map 'xsize', map 'ysize'
 	local closest = {}
