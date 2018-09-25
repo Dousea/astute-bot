@@ -49,13 +49,13 @@ function method:engage()
 	if self._target > 0 then
 		if ai_freeline(id, target_x, target_y) then
 			-- is on enough angle to attack?
-			if math.abs(helper.angledelta(player(id, 'rot'), helper.angleto(x, y, target_x, target_y))) < 20 then
+			if math.abs(helper_angledelta(player(id, 'rot'), helper_angleto(x, y, target_x, target_y))) < 20 then
 				ai_iattack(id)
 			end
 			
 			-- is the range enough for close combat?
 			if itemtype(player(id, 'weapontype'), 'range') < 50 then
-				ai_move(id, helper.angleto(x, y, target_x, target_y))
+				ai_move(id, helper_angleto(x, y, target_x, target_y))
 			end
 		else
 			self:goto(math.floor(target_x/32), math.floor(target_y/32))

@@ -2,7 +2,7 @@ local helper = require(BOT_DIR .. 'helper')
 local method = {}
 
 function method:signalnoise(x, y, volume, source)
-	local dist = helper.dist(player(self._id, 'x'), player(self._id, 'y'), x, y)
+	local dist = helper_dist(player(self._id, 'x'), player(self._id, 'y'), x, y)
 	
 	if dist < 640 then	
 		if not (self:isinrange(x, y) and self:isonsight(x, y)) then

@@ -1,6 +1,7 @@
 dofile 'bots/include/constants.lua'
 dofile 'bots/include/general.lua'
 dofile 'bots/include/spots.lua'
+dofile 'bots/include/helper.lua'
 dofile 'bots/include/bot.lua'
 dofile 'bots/include/hook.lua'
 

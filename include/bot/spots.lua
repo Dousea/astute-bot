@@ -33,7 +33,7 @@ function method:scanspot()
 			local x, y = tilex * 32 + 16, tiley * 32 + 16
 			
 			if not self:isonsight(x, y) then
-				local angle = math.abs(helper.angledelta(bot_rot, helper.angleto(bot_x, bot_y, x, y)))
+				local angle = math.abs(helper_angledelta(bot_rot, helper_angleto(bot_x, bot_y, x, y)))
 				
 				if not bestid or angle > bestangle then
 					bestid = id

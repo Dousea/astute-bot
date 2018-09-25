@@ -64,7 +64,7 @@ function method:isinrange(x, y)
 end
 
 function method:isonsight(x, y)
-	return BOT_SV_FOW == 0 or (math.abs(helper.angledelta(player(self._id, 'rot'), helper.angleto(player(self._id, 'x'), player(self._id, 'y'), x, y))) < 67.5 and ai_freeline(self._id, x, y))
+	return BOT_SV_FOW == 0 or (math.abs(helper_angledelta(player(self._id, 'rot'), helper_angleto(player(self._id, 'x'), player(self._id, 'y'), x, y))) < 67.5 and ai_freeline(self._id, x, y))
 end
 
 do
@@ -123,7 +123,7 @@ do
 							if lowestprice then
 								tocollect = iid
 								
-								if helper.dist(bot_x, bot_y, x, y) <= 2 then
+								if helper_dist(bot_x, bot_y, x, y) <= 2 then
 									ai_selectweapon(self._id, lowesttype)
 									ai_drop(self._id)
 								end
