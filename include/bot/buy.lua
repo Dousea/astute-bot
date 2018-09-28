@@ -39,7 +39,6 @@ function method:buy()
 	local id = self._id
 	local team = player(id, 'team')
 	local money = player(id, 'money')
-	local ownedprimary, ownedsecondary
 	
 	-- STEP 0: Track owned weapons
 	if self._buy_sub == 0 then
@@ -61,7 +60,7 @@ function method:buy()
 				end
 			end
 			
-			ownedprimary, ownedsecondary = retslot.primary, retslot.secondary
+			self._ownedprimary, self._ownedsecondary = retslot.primary, retslot.secondary
 	--	end
 	-- STEP 1: Equipment
 	elseif self._buy_sub == 1 then
@@ -110,10 +109,10 @@ function method:buy()
 				for index, slot in ipairs(chosenslot) do
 					if math.random(1, #chosenslot) == 1 or index == #chosenslot then -- random math to use the slot or not, or already at the last
 						if buyfromslot >= slot then
-							self._primarybought = newweaponfromslot(ownedprimary, primaryweapons[slot], BOT_BOT_SKILL, money)
+							self._primarybought = newweaponfromslot(self._ownedprimary, primaryweapons[slot], BOT_BOT_SKILL, money)
 							
-							if ownedprimary and self._primarybought ~= ownedprimary then
-								ai_selectweapon(id, ownedprimary)
+							if self._ownedprimary and self._primarybought ~= self._ownedprimary then
+								ai_selectweapon(id, self._ownedprimary)
 								ai_drop(id)
 							end
 							
@@ -126,10 +125,10 @@ function method:buy()
 			end
 		elseif BOT_BOT_WEAPONS >= 3 then
 			if money >= primaryweapons[BOT_BOT_WEAPONS][#primaryweapons[BOT_BOT_WEAPONS]][2] then
-				self._primarybought = newweaponfromslot(ownedprimary, primaryweapons[BOT_BOT_WEAPONS], BOT_BOT_SKILL, money)
+				self._primarybought = newweaponfromslot(self._ownedprimary, primaryweapons[BOT_BOT_WEAPONS], BOT_BOT_SKILL, money)
 				
-				if ownedprimary and self._primarybought ~= ownedprimary then
-					ai_selectweapon(id, ownedprimary)
+				if self._ownedprimary and self._primarybought ~= self._ownedprimary then
+					ai_selectweapon(id, self._ownedprimary)
 					ai_drop(id)
 				end
 				
@@ -153,10 +152,10 @@ function method:buy()
 		-- Random number for buying handgun, so if BOT_BOT_SKILL == 4 then they WON'T buy a handgun
 		if bot_random() > 1 then
 			if BOT_BOT_WEAPONS == 0 or BOT_BOT_WEAPONS == 2 then
-				self._secondarybought = newweaponfromslot(ownedsecondary, BOT_BUY_WEAPON_SECONDARY, BOT_BOT_SKILL, money)
+				self._secondarybought = newweaponfromslot(self._ownedsecondary, BOT_BUY_WEAPON_SECONDARY, BOT_BOT_SKILL, money)
 				
-				if ownedsecondary and self._secondarybought ~= ownedsecondary then
-					ai_drop(id, ownedsecondary)
+				if self._ownedsecondary and self._secondarybought ~= self._ownedsecondary then
+					ai_drop(id, self._ownedsecondary)
 				end
 				
 				ai_buy(id, self._secondarybought)
@@ -177,11 +176,11 @@ function method:buy()
 	-- STEP 5: Ammos
 	elseif self._buy_sub == 5 then
 		-- Ammos are full when bought fresh from the store so... no need to buy them if unnecessary
-		if ownedprimary == self._primarybought then
+		if self._ownedprimary == self._primarybought then
 			ai_buy(id, 61)
 		end
 		
-		if ownedsecondary == self._secondarybought then
+		if self._ownedsecondary == self._secondarybought then
 			ai_buy(id, 62)
 		end
 	-- STEP 6: Switch weapon
@@ -197,6 +196,7 @@ function method:buy()
 		self._buy_sub = self._buy_sub+1
 		self._buy_time = bot_random(1, 10)
 	else
+		self._ownedprimary, self._ownedsecondary = nil, nil
 		self._buy = true
 		self._mode = 0 return
 	end
