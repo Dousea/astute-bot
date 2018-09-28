@@ -1,4 +1,3 @@
-local helper = require(BOT_DIR .. 'helper')
 local method = {}
 
 function method:signalnoise(x, y, volume, source)
