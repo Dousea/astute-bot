@@ -59,21 +59,24 @@ function method:reset()
 end
 
 function method:isinrange(x, y)
-	return math.abs(player(self._id, 'x')-x) < 393 and math.abs(player(self._id, 'y')-y) < 208
+	-- 393 = screen width (850) / 2 - player size (32); 208 = screen height (480) / 2 - player size (32)
+	return math.abs(player(self._id, 'x') - x) < 393 and math.abs(player(self._id, 'y') - y) < 208
 end
 
 function method:isonsight(x, y)
-	return BOT_SV_FOW == 0 or (math.abs(helper_angledelta(player(self._id, 'rot'), helper_angleto(player(self._id, 'x'), player(self._id, 'y'), x, y))) < 67.5 and ai_freeline(self._id, x, y))
+	return BOT_SV_FOW == 0 or
+		(math.abs(helper_angledelta(player(self._id, 'rot'),
+									-- 65 = human's field of vision (130) / 2
+									helper_angleto(player(self._id, 'x'), player(self._id, 'y'), x, y))) < 65 and ai_freeline(self._id, x, y))
 end
 
 do
-	local exception = {
-		[55] = true,
-		[63] = true,
-		[70] = true,
-		[71] = true
-	}
+	-- 'Bomb', 'Planted bomb', 'Red Flag', and 'Blue Flag' are exceptions to item scanner
+	local exception = {[55] = true, [63] = true, [70] = true, [71] = true}
 	
+	-- Item scanner relies on the pricing of the items and the absency of the item
+	-- TODO: Ammo needs to be taken into account
+	-- FIXME: Scanning items feels heavy, don't you think so?
 	function method:scanitems()
 		local plitems = {}
 		local slots = {}
@@ -91,6 +94,7 @@ do
 		end
 		
 		local bot_x, bot_y = player(self._id, 'tilex'), player(self._id, 'tiley')
+		-- 7 = floor((screen height (480) / 2) / 32)
 		local items = closeitems(self._id, 7)
 		
 		for i = 1, #items do
@@ -139,7 +143,9 @@ do
 					end
 					
 					if tocollect then
-						self:goto(x, y) break
+						self:goto(x, y)
+						
+						break
 					end
 				end
 			end
