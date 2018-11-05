@@ -1,5 +1,15 @@
+-- It seems that 'require' accepts dots rather than slashes in common libraries
+local _require = require
+
+function require(modname)
+	return _require(modname:gsub('%.', '/'))
+end
+
+vector = require 'bots.include.lib.vector'
+
 dofile 'bots/include/constants.lua'
 dofile 'bots/include/general.lua'
+dofile 'bots/include/path.lua'
 dofile 'bots/include/spots.lua'
 dofile 'bots/include/helper.lua'
 dofile 'bots/include/bot.lua'
