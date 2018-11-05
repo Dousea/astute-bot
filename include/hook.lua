@@ -2,7 +2,7 @@
 setmetatable(_G, {__newindex=function(t, k, v)local hook=k:match'bot_hook_(%w+)'if hook then addhook(hook, k)end rawset(t, k, v) end})
 
 function bot_hook_spawn(id)
-	if not player(id, 'bot') then
+	if player(id, 'bot') then
 		bot_invoke(id, 'reset')
 	end
 end
