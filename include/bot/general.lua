@@ -4,6 +4,14 @@ function method:reset()
 	self._init = true
 	self._mode = 0
 	
+	-- for movement
+	self._velocity = vector()
+	self._steering = vector() -- every frame is resetted
+	
+	-- for path-following movement
+	self._path = nil
+	self._curnode = 1 -- as index
+	
 	self._hiding = false
 	self._tocover = false
 	self._covering = false
@@ -20,7 +28,6 @@ function method:reset()
 	self._noise_x, self._noise_y = 0, 0
 	self._noise_volume, self._noise_maxvolume = 0, 0
 	
-	self._destx, self._desty = 0, 0
 	self._prevx, self._prevy = 0, 0
 	
 	self._randomaimtime = 0
@@ -154,11 +161,12 @@ do
 end
 
 function method:goto(x, y)
-	self._destx, self._desty = x, y
-	self._mode = -2
+	self._path = bot_path_get(player(self._id, 'tilex'), player(self._id, 'tiley'), x, y)
+	self._curnode = 1
+	self._mode = self._path ~= nil and -2 or 0
 end
 
-local debugmsg = 'm:%d t:%d p:%.0fs n:%d|%.2f|%d,%d h:%d ca:%d|%d co:%d|%d'
+local debugmsg = 'm:%d t:%d a:%d n:%d|%.2f|%d,%d h:%d ca:%d|%d co:%d|%d'
 
 function method:update()
 	self:look()
@@ -176,7 +184,7 @@ function method:update()
 	elseif self._mode == -1 then
 		self:buy()
 	elseif self._mode == -2 then
-		if ai_goto(self._id, self._destx, self._desty) ~= 2 then
+		if self:pathfollowing() == 1 then
 			self._mode = 0
 		end
 	elseif self._mode == -3 then
@@ -185,14 +193,19 @@ function method:update()
 		self:behavior()
 	end
 	
+	self:collisionavoidance()
+	self:move()
 	self:markscannedspots()
 	self:diminishnoise()
 	
 	if BOT_DEBUGAI == 1 then
+		local deg = math.deg(self._velocity:angleTo())
+		deg = deg + 90 if deg > -180 and deg < 0 then deg = deg + 360 end
+		
 		ai_debug(self._id, debugmsg:format(
 			self._mode,
 			self._target,
-			'0.00',--self._panictime / 50,
+			deg,
 			self._noise and 1 or 0,
 			self._noise and self._noise_volume or 0,
 			self._noise and math.floor(self._noise_x / 32) or 0,
